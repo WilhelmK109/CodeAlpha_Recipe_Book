@@ -26,29 +26,51 @@ const addRecipe = (event) => {
 
 // Function to display recipes in the "Recipes" section
 const displayRecipes = () => {
-  const recipesSection = document.getElementById('recipes');
-  recipesSection.innerHTML = '<h2>My Recipes</h2>';
+  const recipesList = document.getElementById('recipes-list');
+  recipesList.innerHTML = '';
 
   if (recipes.lenght === 0) {
-    recipesSection.innerHTML += '<p>No recipes available.</p>';
+    recipesList.innerHTML = '<p>No recipes available.</p>';
   } else {
-    recipesSection.innerHTML += '<ul>';
     recipes.forEach((recipe) => {
-      recipesSection.innerHTML += `<li><img src="${recipe.url}" alt="${recipe.name}"><h3>${recipe.name}</h3><p>${recipe.description}</p></li>`;
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `<img src="${recipe.url}" alt="${recipe.name}"><h3>${recipe.name}</h3><p>${recipe.description}</p>`;
+      recipesList.appendChild(listItem);
     });
-    recipesSection.innerHTML += '</ul>';
   }
-}
+};
 
 // Function to reset the add recipe form
 const resetForm = () => {
   document.getElementById('recipe-url').value = '';
   document.getElementById('recipe-name').value = '';
   document.getElementById('recipe-description').value = '';
-}
+};
+
+// Function to search recipes
+const searchRecipes = () => {
+  const filteredRecipes = recipes.filter(recipe => recipe.name.toLowerCase().includes(searchInput) || recipe.description.toLowerCase().includes(searchInput));
+  displaySearchResults(filteredRecipes);
+};
+
+// Function to display search results
+const displaySearchResults = (results) => {
+  const recipesList = document.getElementById('recipes-list');
+  recipesList.innerHTML = '';
+
+  if (results.length === 0) {
+    recipesList.innerHTML = '<p>No matching recipes found.</p>';
+  } else {
+    results.forEach((recipe) => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `<img src="${recipe.url}" alt="${recipe.name}"><h3>${recipe.name}</h3><p>${recipe.description}</p>`;
+      recipesList.appendChild(listItem);
+    });
+  }
+};
 
 // Event listener for submitting the add recipe form
-document.getElementById('recipe-form').addEventListener('submit', addRecipe);
+// document.getElementById('recipe-form').addEventListener('submit', addRecipe);
 
 // Initial display of recipes
 displayRecipes();
