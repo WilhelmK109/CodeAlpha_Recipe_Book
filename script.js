@@ -1,28 +1,4 @@
-let recipes = [];
-
-// Function to add a recipe
-const addRecipe = (event) => {
-  event.preventDefault();
-
-  const recipeUrl = document.getElementById('recipe-url').value;
-  const recipeName = document.getElementById('recipe-name').value;
-  const recipeDescription = document.getElementById('recipe-description').value;
-
-  if (recipeUrl && recipeName && recipeDescription) {
-    const newRecipe = {
-      id: recipes.length + 1,
-      url: recipeUrl,
-      name: recipeName,
-      description: recipeDescription,
-    };
-
-    recipes.push(newRecipe);
-    displayRecipes();
-    resetForm();
-  } else {
-    alert('Please fill in all fields');
-  }
-}
+const recipes = [];
 
 // Function to display recipes in the "Recipes" section
 const displayRecipes = () => {
@@ -47,12 +23,6 @@ const resetForm = () => {
   document.getElementById('recipe-description').value = '';
 };
 
-// Function to search recipes
-const searchRecipes = () => {
-  const filteredRecipes = recipes.filter(recipe => recipe.name.toLowerCase().includes(searchInput) || recipe.description.toLowerCase().includes(searchInput));
-  displaySearchResults(filteredRecipes);
-};
-
 // Function to display search results
 const displaySearchResults = (results) => {
   const recipesList = document.getElementById('recipes-list');
@@ -68,6 +38,42 @@ const displaySearchResults = (results) => {
     });
   }
 };
+
+// Function to search recipes
+const searchRecipes = () => {
+  const searchInput = document.querySelector('.search-box').value.toLowerCase();
+  const filteredRecipes = recipes.filter((recipe) => recipe.name.toLowerCase().includes(searchInput)
+  || recipe.description.toLowerCase().includes(searchInput));
+  displaySearchResults(filteredRecipes);
+};
+
+searchRecipes();
+
+// Function to add a recipe
+const addRecipe = (event) => {
+  event.preventDefault();
+
+  const recipeUrl = document.getElementById('recipe-url').value;
+  const recipeName = document.getElementById('recipe-name').value;
+  const recipeDescription = document.getElementById('recipe-description').value;
+
+  if (recipeUrl && recipeName && recipeDescription) {
+    const newRecipe = {
+      id: recipes.length + 1,
+      url: recipeUrl,
+      name: recipeName,
+      description: recipeDescription,
+    };
+
+    recipes.push(newRecipe);
+    displayRecipes();
+    resetForm();
+  } else {
+    alert('Please fill in all fields');
+  }
+};
+
+addRecipe();
 
 // Event listener for submitting the add recipe form
 // document.getElementById('recipe-form').addEventListener('submit', addRecipe);
