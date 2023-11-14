@@ -68,6 +68,7 @@ const addRecipe = (event) => {
     recipes.push(newRecipe);
     displayRecipes();
     resetForm();
+    saveToLocalStorage();
   } else {
     alert('Please fill in all fields');
   }
@@ -84,6 +85,7 @@ const deleteRecipe = (recipeId) => {
     if (index !== -1) {
       recipes.splice(index, 1);
       displayRecipes();
+      saveToLocalStorage();
     }
   }
 };
@@ -132,6 +134,7 @@ const editRecipe = (recipeId) => {
     // Display the updated list of rcipes
     displayRecipes();
     resetForm();
+    saveToLocalStorage();
   };
 };
 
