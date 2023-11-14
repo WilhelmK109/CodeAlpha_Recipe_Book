@@ -29,13 +29,13 @@
   <section id="home">
     <h1>Welcome to My Recipe Book</h1>
     <p>Explore and organize your favourite recipes here.</p>
-    <form>
+    <form method="post">
       <input
         type="text"
         placeholder="Search for recipes"
         class="search-box"
       />
-      <button type="button" onclick="searchRecipes">Search</button>
+      <button type="submit" onclick="searchRecipes()" id="search-button">Search</button>
     </form>
   </section>
 
@@ -58,7 +58,7 @@
       <label for="recipe-description">Recipe Description</label>
       <textarea id="recipe-description" placeholder="Enter Description" required></textarea>
 
-      <button type="button" onclick="addRecipe()">Add Recipe</button>
+      <button type="submit" onclick="addRecipe(event)">Add Recipe</button>
     </form>
   </section>
 
@@ -67,6 +67,7 @@
     <ul id="edit-delete-list">
       <!-- Display list of editable recipes here -->
     </ul>
+    <button class="delete-button" onclick="deleteRecipe(`${recipe.id}`)">Delete</button>
   </section>
 </body>
 </html>

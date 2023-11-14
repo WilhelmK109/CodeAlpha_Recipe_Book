@@ -5,7 +5,7 @@ const displayRecipes = () => {
   const recipesList = document.getElementById('recipes-list');
   recipesList.innerHTML = '';
 
-  if (recipes.lenght === 0) {
+  if (recipes.length === 0) {
     recipesList.innerHTML = '<p>No recipes available.</p>';
   } else {
     recipes.forEach((recipe) => {
@@ -73,10 +73,62 @@ const addRecipe = (event) => {
   }
 };
 
-addRecipe();
-
-// Event listener for submitting the add recipe form
-// document.getElementById('recipe-form').addEventListener('submit', addRecipe);
-
 // Initial display of recipes
 displayRecipes();
+
+// Function to delete a recipe
+const deleteRecipe = (recipeId) => {
+  const index = recipes.findIndex(recipe => recipe.id === recipeId);
+  if (index !== -1) {
+    recipes.splice(index, 1);
+    displayRecipes();
+  }
+};
+
+// Function to display recipes in the "Edit/Delete Recipes" section
+const displayEditDeleteRecipes = () => {
+  const editDeleteList = document.getElementById('recipes-list');
+  editDeleteList.innerHTML = '';
+
+  if (recipes.length === 0) {
+    editDeleteList.innerHTML = '<p>No recipes available.</p>';
+  } else {
+    recipes.forEach((recipe) => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `<img src="${recipe.url}" alt="${recipe.name}">
+                            <h3>${recipe.name}</h3>
+                            <p>${recipe.description}</p>
+                            <button class="edit-button" onclick="editRecipe(${recipe.id}">Edit</button>
+                            <button class="delete-button" onclick="deleteRecipe(${recipe.id})">Delete</button>`;
+      editDeleteList.appendChild(listItem);
+    });
+  }
+};
+
+displayEditDeleteRecipes();
+
+// Function to edit a recipe
+const editRecipe = (recipeId) => {
+  // Find the recipe to edited
+  const recipeToEdit = recipes.find(recipe => recipe.id === recipeId);
+
+  // Pre-fill the form with existing values
+  document.getElementById('recipe-url').value = recipeToEdit.url;
+  document.getElementById('recipe-name').value = recipeToEdit.name;
+  document.getElementById('recipe-description').value = recipeToEdit.description;
+
+  // Update the recipe in the array when the is submitted
+  document.getElementId('recipe-form').onsubmit = function (event) {
+    event.preventDefault();
+
+    // Update the existing recipe
+    recipeToEdit.url = document.getElementById('recipe-url').value;
+    recipeToEdit.name = document.getElementById('recipe-name').value;
+    recipeToEdit.description = document.getElementById('recipe-description').value;
+
+    // Display the updated list of rcipes
+    displayRecipes();
+    resetForm();
+  }
+
+}
