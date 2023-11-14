@@ -78,7 +78,7 @@ displayRecipes();
 
 // Function to delete a recipe
 const deleteRecipe = (recipeId) => {
-  const index = recipes.findIndex(recipe => recipe.id === recipeId);
+  const index = recipes.findIndex((recipe) => recipe.id === recipeId);
   if (index !== -1) {
     recipes.splice(index, 1);
     displayRecipes();
@@ -87,7 +87,7 @@ const deleteRecipe = (recipeId) => {
 
 // Function to display recipes in the "Edit/Delete Recipes" section
 const displayEditDeleteRecipes = () => {
-  const editDeleteList = document.getElementById('recipes-list');
+  const editDeleteList = document.getElementById('edit-delete-recipe');
   editDeleteList.innerHTML = '';
 
   if (recipes.length === 0) {
@@ -110,7 +110,7 @@ displayEditDeleteRecipes();
 // Function to edit a recipe
 const editRecipe = (recipeId) => {
   // Find the recipe to edited
-  const recipeToEdit = recipes.find(recipe => recipe.id === recipeId);
+  const recipeToEdit = recipes.find((recipe) => recipe.id === recipeId);
 
   // Pre-fill the form with existing values
   document.getElementById('recipe-url').value = recipeToEdit.url;
@@ -129,6 +129,5 @@ const editRecipe = (recipeId) => {
     // Display the updated list of rcipes
     displayRecipes();
     resetForm();
-  }
-
-}
+  };
+};
