@@ -78,10 +78,13 @@ displayRecipes();
 
 // Function to delete a recipe
 const deleteRecipe = (recipeId) => {
-  const index = recipes.findIndex((recipe) => recipe.id === recipeId);
-  if (index !== -1) {
-    recipes.splice(index, 1);
-    displayRecipes();
+  const confirmation = confirm("Are you sure you want to delete this recipe?");
+  if (confirmation) {
+    const index = recipes.findIndex((recipe) => recipe.id === recipeId);
+    if (index !== -1) {
+      recipes.splice(index, 1);
+      displayRecipes();
+    }
   }
 };
 
@@ -98,7 +101,7 @@ const displayEditDeleteRecipes = () => {
       listItem.innerHTML = `<img src="${recipe.url}" alt="${recipe.name}">
                             <h3>${recipe.name}</h3>
                             <p>${recipe.description}</p>
-                            <button class="edit-button" onclick="editRecipe(${recipe.id}">Edit</button>
+                            <button class="edit-button" onclick="editRecipe(${recipe.id})">Edit</button>
                             <button class="delete-button" onclick="deleteRecipe(${recipe.id})">Delete</button>`;
       editDeleteList.appendChild(listItem);
     });
@@ -118,7 +121,7 @@ const editRecipe = (recipeId) => {
   document.getElementById('recipe-description').value = recipeToEdit.description;
 
   // Update the recipe in the array when the is submitted
-  document.getElementId('recipe-form').onsubmit = function (event) {
+  document.getElementById('recipe-form').onsubmit = function (event) {
     event.preventDefault();
 
     // Update the existing recipe
@@ -131,3 +134,22 @@ const editRecipe = (recipeId) => {
     resetForm();
   };
 };
+
+// Save recipes to local storage
+const saveToLocalStorage = () => {
+  localStorage.setItem('recipes', JSON.stringify(recipes));
+};
+
+// Load recipes from local storage
+const loadFromLocalStorage = () => {
+  const storedRecipes = JSON.parse(localStorage.getItem('recipes'));
+  if (storedRecipes) {
+    recipes.push(...storedRecipes);
+  }
+};
+
+// Call loadFromLocalStorage on page load
+loadFromLocalStorage();
+
+// Call saveToLocalStorage whenever recipes are updated
+displayRecipes();
