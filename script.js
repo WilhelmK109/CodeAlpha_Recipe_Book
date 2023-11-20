@@ -1,4 +1,31 @@
+// Mobile menu
+const hamburgerMenu = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
+
+hamburgerMenu.addEventListener('click', () => {
+  hamburgerMenu.classList.toggle('active');
+  navMenu.classList.toggle('active');
+});
+
+document.querySelectorAll('.nav-link').forEach((link) => link.addEventListener('click', () => {
+  hamburgerMenu.classList.remove('active');
+  navMenu.classList.remove('active');
+}));
+
 const recipes = [];
+
+// Save recipes to local storage
+const saveToLocalStorage = () => {
+  localStorage.setItem('recipes', JSON.stringify(recipes));
+};
+
+// Load recipes from local storage
+const loadFromLocalStorage = () => {
+  const storedRecipes = JSON.parse(localStorage.getItem('recipes'));
+  if (storedRecipes) {
+    recipes.push(...storedRecipes);
+  }
+};
 
 // Function to display recipes in the "Recipes" section
 const displayRecipes = () => {
@@ -47,7 +74,7 @@ const searchRecipes = () => {
   displaySearchResults(filteredRecipes);
 };
 
-searchRecipes();
+// searchRecipes();
 
 // Function to add a recipe
 const addRecipe = (event) => {
@@ -74,25 +101,9 @@ const addRecipe = (event) => {
   }
 };
 
-// Initial display of recipes
-displayRecipes();
-
-// Function to delete a recipe
-const deleteRecipe = (recipeId) => {
-  const confirmation = confirm("Are you sure you want to delete this recipe?");
-  if (confirmation) {
-    const index = recipes.findIndex((recipe) => recipe.id === recipeId);
-    if (index !== -1) {
-      recipes.splice(index, 1);
-      displayRecipes();
-      saveToLocalStorage();
-    }
-  }
-};
-
 // Function to display recipes in the "Edit/Delete Recipes" section
 const displayEditDeleteRecipes = () => {
-  const editDeleteList = document.getElementById('edit-delete-recipe');
+  const editDeleteList = document.getElementById('edit-delete-list');
   editDeleteList.innerHTML = '';
 
   if (recipes.length === 0) {
@@ -103,14 +114,25 @@ const displayEditDeleteRecipes = () => {
       listItem.innerHTML = `<img src="${recipe.url}" alt="${recipe.name}">
                             <h3>${recipe.name}</h3>
                             <p>${recipe.description}</p>
-                            <button class="edit-button" onclick="editRecipe(${recipe.id})">Edit</button>
-                            <button class="delete-button" onclick="deleteRecipe(${recipe.id})">Delete</button>`;
+                            <button class="edit-button" onclick="handleEditDelete(${recipe.id}, 'edit')">Edit</button>
+                            <button class="delete-button" onclick="handleEditDelete(${recipe.id}, 'delete')">Delete</button>`;
       editDeleteList.appendChild(listItem);
     });
   }
 };
 
-displayEditDeleteRecipes();
+// Function to delete a recipe
+const deleteRecipe = (recipeId) => {
+  const confirmation = window.confirm('Are you sure you want to delete this recipe?');
+  if (confirmation) {
+    const index = recipes.findIndex((recipe) => recipe.id === recipeId);
+    if (index !== -1) {
+      recipes.splice(index, 1);
+      displayEditDeleteRecipes();
+      saveToLocalStorage();
+    }
+  }
+};
 
 // Function to edit a recipe
 const editRecipe = (recipeId) => {
@@ -123,7 +145,7 @@ const editRecipe = (recipeId) => {
   document.getElementById('recipe-description').value = recipeToEdit.description;
 
   // Update the recipe in the array when the is submitted
-  document.getElementById('recipe-form').onsubmit = function (event) {
+  document.getElementById('recipe-form').onsubmit = (event) => {
     event.preventDefault();
 
     // Update the existing recipe
@@ -132,27 +154,24 @@ const editRecipe = (recipeId) => {
     recipeToEdit.description = document.getElementById('recipe-description').value;
 
     // Display the updated list of rcipes
-    displayRecipes();
-    resetForm();
+    displayEditDeleteRecipes();
+    // resetForm();
     saveToLocalStorage();
   };
 };
 
-// Save recipes to local storage
-const saveToLocalStorage = () => {
-  localStorage.setItem('recipes', JSON.stringify(recipes));
-};
-
-// Load recipes from local storage
-const loadFromLocalStorage = () => {
-  const storedRecipes = JSON.parse(localStorage.getItem('recipes'));
-  if (storedRecipes) {
-    recipes.push(...storedRecipes);
+// Function to handle edit/delete actions
+// eslint-disable-next-line no-unused-vars
+const handleEditDelete = (recipeId, action) => {
+  if (action === 'edit') {
+    editRecipe(recipeId);
+  } else if (action === 'delete') {
+    deleteRecipe(recipeId);
   }
 };
 
-// Call loadFromLocalStorage on page load
 loadFromLocalStorage();
-
-// Call saveToLocalStorage whenever recipes are updated
 displayRecipes();
+displayEditDeleteRecipes();
+addRecipe();
+searchRecipes();
