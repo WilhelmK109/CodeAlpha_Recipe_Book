@@ -67,14 +67,17 @@ const displaySearchResults = (results) => {
 };
 
 // Function to search recipes
-const searchRecipes = () => {
+const searchRecipes = (event) => {
+  event.preventDefault();
+
   const searchInput = document.querySelector('.search-box').value.toLowerCase();
   const filteredRecipes = recipes.filter((recipe) => recipe.name.toLowerCase().includes(searchInput)
   || recipe.description.toLowerCase().includes(searchInput));
   displaySearchResults(filteredRecipes);
 };
 
-// searchRecipes();
+// Attach the event listener to the form
+document.querySelector('form').addEventListener('submit', searchRecipes);
 
 // Function to add a recipe
 const addRecipe = (event) => {
