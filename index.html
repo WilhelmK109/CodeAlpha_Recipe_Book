@@ -21,7 +21,6 @@
         <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="#recipes">Recipes</a></li>
         <li class="nav-item"><a class="nav-link" href="#add-recipe">Add Recipe</a></li>
-        <li class="nav-item"><a class="nav-link" href="#edit-delete-recipe">Edit/Delete Recipe</a></li>
       </ul>
       <div class="hamburger">
         <span class="bar"></span>
@@ -35,7 +34,7 @@
     <section id="home">
       <h1>Welcome to My Recipe Book</h1>
       <p>Explore and organize your favourite recipes here.</p>
-      <form method="post">
+      <form id="search-form">
         <input
           type="text"
           placeholder="Search for recipes"
@@ -48,9 +47,23 @@
     <section id="recipes">
       <h2>My Recipes</h2>
       <ul id="recipes-list">
-        <!-- Display list of recipes here -->
+    
       </ul>
     </section>
+
+    <div id="recipe-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="hideRecipeDetails()">&times;</span>
+        <h2>Recipe Details</h2>
+        <div id="recipe-details-content">
+          <!-- Display details of the selected recipe here -->
+        </div>
+        <div id="edit-delete-recipe">
+          <button id="edit-recipe-btn">Edit</button>
+          <button id="delete-recipe-btn">Delete</button>
+        </div>
+      </div>
+    </div>
   
     <section id="add-recipe">
       <h2>Add Recipe</h2>
@@ -66,13 +79,6 @@
   
         <button type="submit" onclick="addRecipe(event)">Add Recipe</button>
       </form>
-    </section>
-  
-    <section id="edit-delete-recipe">
-      <h2>Edit/Delete Recipe</h2>
-      <ul id="edit-delete-list">
-        <!-- Display list of editable recipes here -->
-      </ul>
     </section>
   </main>
 </body>
