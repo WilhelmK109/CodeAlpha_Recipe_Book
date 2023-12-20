@@ -27,6 +27,29 @@ const loadFromLocalStorage = () => {
   }
 };
 
+// Function to display the details of a selected recipe
+const displayRecipeDetails = (recipeId) => {
+  const recipeDetailsContent = document.getElementById('recipe-details-content');
+  const recipeToDisplay = recipes.find((recipe) => recipe.id === recipeId);
+  // const editDeleteRecipeDiv = document.getElementById('edit-delete-recipe');
+
+  if (recipeToDisplay) {
+    recipeDetailsContent.innerHTML = `<img src="${recipeToDisplay.url}" alt="${recipeToDisplay.name}">
+                                      <h3>${recipeToDisplay.name}</h3>
+                                      <p>${recipeToDisplay.description}</p>`;
+    // Show the modal
+    const modal = document.getElementById('recipe-modal');
+    modal.style.display = 'block';
+
+    // Set the innerHTML of the edit-delete-recipe div
+    const editDeleteRecipeDiv = document.getElementById('edit-delete-recipe');
+    editDeleteRecipeDiv.innerHTML = `
+      <button id="edit-recipe-btn" onclick="handleEditDelete('${recipeId}', 'edit')">Edit</button>
+      <button id="delete-recipe-btn" onclick="handleEditDelete('${recipeId}', 'delete')">Delete</button>
+    `;
+  }
+};
+
 // Function to display recipes in the "Recipes" section
 const displayRecipes = () => {
   const recipesList = document.getElementById('recipes-list');
@@ -37,11 +60,19 @@ const displayRecipes = () => {
   } else {
     recipes.forEach((recipe) => {
       const listItem = document.createElement('li');
-      listItem.innerHTML = `<img src="${recipe.url}" alt="${recipe.name}"><h3>${recipe.name}</h3><p>${recipe.description}</p>`;
+      listItem.innerHTML = `
+        <img src="${recipe.url}" alt="${recipe.name}">
+        <h3>${recipe.name}</h3>
+        <p>${recipe.description}</p>
+      `;
+      listItem.addEventListener('click', () => displayRecipeDetails(recipe.id));
       recipesList.appendChild(listItem);
     });
   }
 };
+
+// Call displayRecipes to initialize the list
+displayRecipes();
 
 // Function to reset the add recipe form
 const resetForm = () => {
@@ -77,7 +108,7 @@ const searchRecipes = (event) => {
 };
 
 // Attach the event listener to the form
-document.querySelector('form').addEventListener('submit', searchRecipes);
+document.getElementById('search-form').addEventListener('submit', searchRecipes);
 
 // Function to add a recipe
 const addRecipe = (event) => {
@@ -104,24 +135,10 @@ const addRecipe = (event) => {
   }
 };
 
-// Function to display recipes in the "Edit/Delete Recipes" section
-const displayEditDeleteRecipes = () => {
-  const editDeleteList = document.getElementById('edit-delete-list');
-  editDeleteList.innerHTML = '';
-
-  if (recipes.length === 0) {
-    editDeleteList.innerHTML = '<p>No recipes available.</p>';
-  } else {
-    recipes.forEach((recipe) => {
-      const listItem = document.createElement('li');
-      listItem.innerHTML = `<img src="${recipe.url}" alt="${recipe.name}">
-                            <h3>${recipe.name}</h3>
-                            <p>${recipe.description}</p>
-                            <button class="edit-button" onclick="handleEditDelete(${recipe.id}, 'edit')">Edit</button>
-                            <button class="delete-button" onclick="handleEditDelete(${recipe.id}, 'delete')">Delete</button>`;
-      editDeleteList.appendChild(listItem);
-    });
-  }
+// Function to hide the modal
+const hideRecipeDetails = () => {
+  const modal = document.getElementById('recipe-modal');
+  modal.style.display = 'none';
 };
 
 // Function to delete a recipe
@@ -131,8 +148,9 @@ const deleteRecipe = (recipeId) => {
     const index = recipes.findIndex((recipe) => recipe.id === recipeId);
     if (index !== -1) {
       recipes.splice(index, 1);
-      displayEditDeleteRecipes();
       saveToLocalStorage();
+      displayRecipes();
+      hideRecipeDetails();
     }
   }
 };
@@ -142,25 +160,27 @@ const editRecipe = (recipeId) => {
   // Find the recipe to edited
   const recipeToEdit = recipes.find((recipe) => recipe.id === recipeId);
 
-  // Pre-fill the form with existing values
-  document.getElementById('recipe-url').value = recipeToEdit.url;
-  document.getElementById('recipe-name').value = recipeToEdit.name;
-  document.getElementById('recipe-description').value = recipeToEdit.description;
+  if (recipeToEdit) {
+    // Pre-fill the form with existing values
+    document.getElementById('recipe-url').value = recipeToEdit.url;
+    document.getElementById('recipe-name').value = recipeToEdit.name;
+    document.getElementById('recipe-description').value = recipeToEdit.description;
 
-  // Update the recipe in the array when the is submitted
-  document.getElementById('recipe-form').onsubmit = (event) => {
-    event.preventDefault();
+    // Update the recipe in the array when the is submitted
+    document.getElementById('recipe-form').onsubmit = (event) => {
+      event.preventDefault();
 
-    // Update the existing recipe
-    recipeToEdit.url = document.getElementById('recipe-url').value;
-    recipeToEdit.name = document.getElementById('recipe-name').value;
-    recipeToEdit.description = document.getElementById('recipe-description').value;
+      // Update the existing recipe
+      recipeToEdit.url = document.getElementById('recipe-url').value;
+      recipeToEdit.name = document.getElementById('recipe-name').value;
+      recipeToEdit.description = document.getElementById('recipe-description').value;
 
-    // Display the updated list of rcipes
-    displayEditDeleteRecipes();
-    // resetForm();
-    saveToLocalStorage();
-  };
+      resetForm();
+      saveToLocalStorage();
+      displayRecipes();
+      hideRecipeDetails();
+    };
+  }
 };
 
 // Function to handle edit/delete actions
@@ -173,8 +193,20 @@ const handleEditDelete = (recipeId, action) => {
   }
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('button').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      document.querySelectorAll('body').forEach((target) => target.classList.add('no-scroll'));
+    });
+  });
+  document.querySelectorAll('.close-popup-btn').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      document.querySelectorAll('body').forEach((target) => target.classList.remove('no-scroll'));
+    });
+  });
+});
+
 loadFromLocalStorage();
 displayRecipes();
-displayEditDeleteRecipes();
 addRecipe();
 searchRecipes();
