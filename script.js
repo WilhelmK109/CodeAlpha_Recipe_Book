@@ -27,6 +27,29 @@ const loadFromLocalStorage = () => {
   }
 };
 
+// Function to display the details of a selected recipe
+const displayRecipeDetails = (recipeId) => {
+  const recipeDetailsContent = document.getElementById('recipe-details-content');
+  const recipeToDisplay = recipes.find((recipe) => recipe.id === recipeId);
+  // const editDeleteRecipeDiv = document.getElementById('edit-delete-recipe');
+
+  if (recipeToDisplay) {
+    recipeDetailsContent.innerHTML = `<img src="${recipeToDisplay.url}" alt="${recipeToDisplay.name}">
+                                      <h3>${recipeToDisplay.name}</h3>
+                                      <p>${recipeToDisplay.description}</p>`;
+    // Show the modal
+    const modal = document.getElementById('recipe-modal');
+    modal.style.display = 'block';
+
+    // Set the innerHTML of the edit-delete-recipe div
+    const editDeleteRecipeDiv = document.getElementById('edit-delete-recipe');
+    editDeleteRecipeDiv.innerHTML = `
+      <button id="edit-recipe-btn" onclick="handleEditDelete('${recipeId}', 'edit')">Edit</button>
+      <button id="delete-recipe-btn" onclick="handleEditDelete('${recipeId}', 'delete')">Delete</button>
+    `;
+  }
+};
+
 // Function to display recipes in the "Recipes" section
 const displayRecipes = () => {
   const recipesList = document.getElementById('recipes-list');
@@ -110,29 +133,6 @@ const addRecipe = (event) => {
   } else {
     alert('Please fill in all fields');
   }
-};
-
-// Function to display the details of a selected recipe
-const displayRecipeDetails = (recipeId) => {
-  const recipeDetailsContent = document.getElementById('recipe-details-content');
-  const recipeToDisplay = recipes.find((recipe) => recipe.id === recipeId);
-  // const editDeleteRecipeDiv = document.getElementById('edit-delete-recipe');
-
-  if (recipeToDisplay) {
-    recipeDetailsContent.innerHTML = `<img src="${recipeToDisplay.url}" alt="${recipeToDisplay.name}">
-                                      <h3>${recipeToDisplay.name}</h3>
-                                      <p>${recipeToDisplay.description}</p>`;
-    // Show the modal
-    const modal = document.getElementById('recipe-modal');
-    modal.style.display = 'block';
-
-    // Set the innerHTML of the edit-delete-recipe div
-    const editDeleteRecipeDiv = document.getElementById('edit-delete-recipe');
-    editDeleteRecipeDiv.innerHTML = `
-      <button id="edit-recipe-btn" onclick="handleEditDelete('${recipeId}', 'edit')">Edit</button>
-      <button id="delete-recipe-btn" onclick="handleEditDelete('${recipeId}', 'delete')">Delete</button>
-    `;
-   }
 };
 
 // Function to hide the modal
